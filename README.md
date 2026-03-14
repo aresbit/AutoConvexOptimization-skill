@@ -246,21 +246,30 @@ Scope: src/**/*.test.ts, src/**/*.ts
 Metric: coverage % (higher is better)
 Verify: npm test -- --coverage | grep "All files"
 ```
+
+Bounded variant — run 20 iterations then stop:
+```
+/loop 20 /autoresearch
+Goal: Increase test coverage from 72% to 90%
+Scope: src/**/*.test.ts, src/**/*.ts
+Metric: coverage % (higher is better)
+Verify: npm test -- --coverage | grep "All files"
+```
 Claude adds tests one-by-one. Each iteration: write test → run coverage → keep if % increased → discard if not → repeat.
 
 **Reduce bundle size**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Reduce production bundle size
 Scope: src/**/*.tsx, src/**/*.ts
 Metric: bundle size in KB (lower is better)
 Verify: npm run build 2>&1 | grep "First Load JS"
 ```
-Claude tries: tree-shaking unused imports, lazy-loading routes, replacing heavy libraries, code-splitting — one change at a time.
+Claude tries: tree-shaking unused imports, lazy-loading routes, replacing heavy libraries, code-splitting — one change at a time. 15 iterations is usually enough to find the big wins.
 
 **Fix flaky tests**
 ```
-/autoresearch
+/loop 10 /autoresearch
 Goal: Zero flaky tests (all tests pass 5 consecutive runs)
 Scope: src/**/*.test.ts
 Metric: failure count across 5 runs (lower is better)
@@ -276,9 +285,18 @@ Metric: p95 response time in ms (lower is better)
 Verify: npm run bench:api | grep "p95"
 ```
 
+Bounded — quick 30-minute session:
+```
+/loop 10 /autoresearch
+Goal: API response time under 100ms (p95)
+Scope: src/api/**/*.ts, src/services/**/*.ts
+Metric: p95 response time in ms (lower is better)
+Verify: npm run bench:api | grep "p95"
+```
+
 **Eliminate TypeScript `any` types**
 ```
-/autoresearch
+/loop 25 /autoresearch
 Goal: Eliminate all TypeScript `any` types
 Scope: src/**/*.ts
 Metric: count of `any` occurrences (lower is better)
@@ -287,7 +305,7 @@ Verify: grep -r ":\s*any" src/ --include="*.ts" | wc -l
 
 **Reduce lines of code**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Reduce lines of code in src/services/ by 30% while keeping all tests green
 Metric: LOC count (lower is better)
 Verify: npm test && find src/services -name "*.ts" | xargs wc -l | tail -1
@@ -299,17 +317,17 @@ Verify: npm test && find src/services -name "*.ts" | xargs wc -l | tail -1
 
 **Cold email optimization**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Improve cold email reply rate prediction score
 Scope: content/email-templates/*.md
 Metric: readability score + personalization token count (higher is better)
 Verify: node scripts/score-email-template.js
 ```
-Claude iterates on subject lines, opening hooks, CTAs, personalization variables — keeping changes that score higher.
+Claude iterates on subject lines, opening hooks, CTAs, personalization variables — keeping changes that score higher. 15 iterations for a focused session.
 
 **Sales deck refinement**
 ```
-/autoresearch
+/loop 10 /autoresearch
 Goal: Reduce slide count while maintaining all key points
 Scope: content/sales-deck/*.md
 Metric: slide count (lower is better), constraint: key-points-checklist.md must all be present
@@ -318,7 +336,7 @@ Verify: node scripts/check-deck-coverage.js && wc -l content/sales-deck/*.md
 
 **Objection handling docs**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Cover all 20 common objections with responses under 50 words each
 Scope: content/objection-responses.md
 Metric: objections covered + avg word count per response (more covered + fewer words = better)
@@ -337,11 +355,15 @@ Scope: content/blog/*.md
 Metric: SEO score from audit tool (higher is better)
 Verify: node scripts/seo-score.js --file content/blog/target-post.md
 ```
-Claude tweaks headings, keyword density, meta descriptions, internal links — one change per iteration.
+Claude tweaks headings, keyword density, meta descriptions, internal links — one change per iteration. Run unlimited overnight, or bounded:
+```
+/loop 25 /autoresearch
+Goal: Maximize SEO score for target keywords
+```
 
 **Landing page copy**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Maximize Flesch readability + keyword density for "AI automation"
 Scope: content/landing-pages/ai-automation.md
 Metric: readability_score * 0.7 + keyword_density_score * 0.3 (higher is better)
@@ -350,7 +372,7 @@ Verify: node scripts/content-score.js content/landing-pages/ai-automation.md
 
 **Email sequence optimization**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Optimize 7-day nurture sequence for clarity and CTA strength
 Scope: content/email-sequences/onboarding/*.md
 Metric: avg readability + CTA score per email (higher is better)
@@ -359,7 +381,7 @@ Verify: node scripts/score-email-sequence.js onboarding
 
 **Ad copy variants**
 ```
-/autoresearch
+/loop 25 /autoresearch
 Goal: Generate and refine 20 ad copy variants, each under 90 chars with power words
 Scope: content/ads/facebook-q1.md
 Metric: variants meeting criteria (higher is better)
@@ -372,7 +394,7 @@ Verify: node scripts/validate-ad-copy.js
 
 **Job description optimization**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Improve job descriptions — bias-free language, clear requirements, inclusive tone
 Scope: content/job-descriptions/*.md
 Metric: inclusivity score from textio-style checker (higher is better)
@@ -381,7 +403,7 @@ Verify: node scripts/jd-inclusivity-score.js
 
 **Policy document clarity**
 ```
-/autoresearch
+/loop 10 /autoresearch
 Goal: Reduce average reading level of HR policies to grade 8
 Scope: content/policies/*.md
 Metric: Flesch-Kincaid grade level (lower is better)
@@ -390,7 +412,7 @@ Verify: node scripts/readability.js content/policies/
 
 **Interview question bank**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Ensure all questions are behavioral (STAR format) + cover all competencies
 Scope: content/interview-questions.md
 Metric: STAR-format compliance % + competency coverage % (higher is better)
@@ -403,7 +425,7 @@ Verify: node scripts/interview-quality.js
 
 **Runbook optimization**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Reduce average runbook steps while maintaining completeness
 Scope: docs/runbooks/*.md
 Metric: avg steps per runbook (lower is better), constraint: all checklist items preserved
@@ -412,7 +434,7 @@ Verify: node scripts/runbook-audit.js
 
 **Process documentation**
 ```
-/autoresearch
+/loop 10 /autoresearch
 Goal: Standardize all SOPs to template format with <100 words per step
 Scope: docs/sops/*.md
 Metric: template compliance % + avg words per step (higher compliance + lower words = better)
@@ -421,7 +443,7 @@ Verify: node scripts/sop-score.js
 
 **Incident response playbooks**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Ensure all playbooks have decision trees, escalation paths, rollback steps
 Scope: docs/incident-playbooks/*.md
 Metric: completeness checklist score (higher is better)
@@ -434,17 +456,17 @@ Verify: node scripts/playbook-completeness.js
 
 **Google Ads copy optimization**
 ```
-/autoresearch
+/loop 30 /autoresearch
 Goal: Generate 50 ad headline variants (max 30 chars) with power words + CTA
 Scope: content/ads/google-search/*.md
 Metric: headlines meeting char limit + power word + CTA criteria (higher is better)
 Verify: node scripts/google-ads-validator.js --type headlines
 ```
-Claude generates headline variants, scores each for character limits, emotional triggers, and CTA presence — discarding any that don't meet criteria.
+Claude generates headline variants, scores each for character limits, emotional triggers, and CTA presence — discarding any that don't meet criteria. 30 iterations to build up 50 variants.
 
 **Landing page CRO (Conversion Rate Optimization)**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Maximize landing page quality score — clear CTA, social proof, urgency, mobile-friendly structure
 Scope: content/landing-pages/product-launch.md
 Metric: CRO checklist score (higher is better)
@@ -453,7 +475,7 @@ Verify: node scripts/cro-score.js content/landing-pages/product-launch.md
 
 **Meta/Facebook ad copy variants**
 ```
-/autoresearch
+/loop 25 /autoresearch
 Goal: Create 30 primary text variants (max 125 chars) optimized for engagement
 Scope: content/ads/meta/*.md
 Metric: variants meeting criteria + avg engagement score (higher is better)
@@ -462,7 +484,7 @@ Verify: node scripts/meta-ad-validator.js
 
 **A/B test hypothesis generation**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Generate 20 testable hypotheses for checkout page, each with metric + expected lift
 Scope: content/experiments/checkout-hypotheses.md
 Metric: valid hypotheses with metric + lift prediction (higher is better)
@@ -471,7 +493,7 @@ Verify: node scripts/hypothesis-validator.js
 
 **UTM campaign taxonomy**
 ```
-/autoresearch
+/loop 10 /autoresearch
 Goal: Standardize all campaign URLs with consistent UTM parameters
 Scope: content/campaigns/utm-tracker.csv
 Metric: UTM compliance % (higher is better)
@@ -480,7 +502,7 @@ Verify: node scripts/utm-validator.js
 
 **Email subject line A/B testing**
 ```
-/autoresearch
+/loop 30 /autoresearch
 Goal: Generate 40 subject lines for product launch — max 50 chars, personalization token, urgency
 Scope: content/emails/subject-lines.md
 Metric: lines meeting all criteria (higher is better)
@@ -493,7 +515,7 @@ Verify: node scripts/subject-line-scorer.js
 
 **Data pipeline quality**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Increase data validation pass rate from 85% to 99%
 Scope: scripts/validators/*.py
 Metric: validation pass rate % (higher is better)
@@ -502,7 +524,7 @@ Verify: python scripts/run_validations.py | grep "pass_rate"
 
 **SQL query optimization**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Reduce total query execution time for dashboard queries
 Scope: queries/dashboard/*.sql
 Metric: total execution time in ms (lower is better)
@@ -511,7 +533,7 @@ Verify: psql -f scripts/bench-queries.sql | grep "total_ms"
 
 **Report template automation**
 ```
-/autoresearch
+/loop 10 /autoresearch
 Goal: Standardize all weekly reports — consistent sections, KPI coverage, action items
 Scope: templates/reports/*.md
 Metric: template compliance score (higher is better)
@@ -524,7 +546,7 @@ Verify: node scripts/report-template-audit.js
 
 **Dockerfile optimization**
 ```
-/autoresearch
+/loop 10 /autoresearch
 Goal: Reduce Docker image size and build time
 Scope: Dockerfile, .dockerignore
 Metric: image size in MB (lower is better)
@@ -533,7 +555,7 @@ Verify: docker build -t bench . 2>&1 && docker images bench --format "{{.Size}}"
 
 **CI/CD pipeline speed**
 ```
-/autoresearch
+/loop 15 /autoresearch
 Goal: Reduce CI pipeline duration from 12min to under 5min
 Scope: .github/workflows/*.yml
 Metric: pipeline duration in seconds (lower is better)
@@ -542,7 +564,7 @@ Verify: node scripts/estimate-ci-time.js
 
 **Terraform/IaC compliance**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Pass all tfsec security checks + reduce resource count
 Scope: infra/*.tf
 Metric: tfsec violations (lower is better)
@@ -555,7 +577,7 @@ Verify: tfsec . --format json | jq '.results | length'
 
 **Accessibility audit**
 ```
-/autoresearch
+/loop 25 /autoresearch
 Goal: Reach WCAG 2.1 AA compliance — zero axe violations
 Scope: src/components/**/*.tsx
 Metric: axe violation count (lower is better)
@@ -564,7 +586,7 @@ Verify: npx playwright test a11y.spec.ts | grep "violations"
 
 **Design token consistency**
 ```
-/autoresearch
+/loop 20 /autoresearch
 Goal: Replace all hardcoded colors/spacing with design tokens
 Scope: src/**/*.tsx, src/**/*.css
 Metric: hardcoded values count (lower is better)
@@ -783,7 +805,17 @@ Goal: Improve lighthouse score from 72 to 95+
 I'm going to sleep — iterate all night. Don't ask me anything.
 ```
 
-### Pattern 2: "Compound Improvements"
+### Pattern 2: "Controlled Sprint"
+
+Run a fixed number of iterations for a focused improvement session (requires Claude Code v1.0.32+).
+
+```
+/loop 15 /autoresearch
+Goal: Increase test coverage from 72% to 85%
+Focus on the modules with lowest coverage first.
+```
+
+### Pattern 3: "Compound Improvements"
 
 Stack small wins. Each kept commit builds on the last.
 
@@ -793,7 +825,7 @@ Goal: Reduce TypeScript errors from 47 to 0
 Start with the easiest fixes. Build momentum. Save hardest for last.
 ```
 
-### Pattern 3: "Explore and Exploit"
+### Pattern 4: "Explore and Exploit"
 
 Let Claude try bold experiments, auto-reverting failures.
 
@@ -804,7 +836,7 @@ Try radical approaches too — different data structures, caching strategies, qu
 If stuck after 5 discards, try something completely different.
 ```
 
-### Pattern 4: "Refactor Without Breaking"
+### Pattern 5: "Refactor Without Breaking"
 
 Safe refactoring with automatic rollback safety net.
 
@@ -815,7 +847,7 @@ Metric: LOC count (lower is better)
 Verify: npm test && find src/services -name "*.ts" | xargs wc -l | tail -1
 ```
 
-### Pattern 5: "Content Factory"
+### Pattern 6: "Content Factory"
 
 Batch-produce content that meets quality gates.
 
@@ -827,7 +859,7 @@ Metric: outlines meeting criteria (higher is better)
 Verify: node scripts/outline-validator.js
 ```
 
-### Pattern 6: "Progressive Hardening"
+### Pattern 7: "Progressive Hardening"
 
 Start lenient, tighten criteria as baseline improves.
 
