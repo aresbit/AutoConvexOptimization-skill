@@ -1,7 +1,7 @@
 ---
 name: autoresearch
 description: Autonomous Goal-directed Iteration. Apply Karpathy's autoresearch principles to ANY task. Loops autonomously — modify, verify, keep/discard, repeat. Supports bounded iteration via Iterations: N inline config.
-version: 1.7.0
+version: 1.7.1
 ---
 
 # Claude Autoresearch — Autonomous Goal-directed Iteration
@@ -46,7 +46,7 @@ For ALL commands (`/autoresearch`, `/autoresearch:plan`, `/autoresearch:debug`, 
 | `/autoresearch:scenario` | Scenario-driven use case generator: explore situations, edge cases, and derivative scenarios |
 | `/autoresearch:predict` | Multi-persona swarm prediction: pre-analyze code from multiple expert perspectives before acting |
 
-### /autoresearch:security — Autonomous Security Audit (v1.0.3)
+### /autoresearch:security — Autonomous Security Audit
 
 Runs a comprehensive security audit using the autoresearch loop pattern. Generates a full STRIDE threat model, maps attack surfaces, then iteratively tests each vulnerability vector — logging findings with severity, OWASP category, and code evidence.
 
@@ -114,7 +114,7 @@ Iterations: 15
 - OWASP Top 10 (2021) — industry-standard vulnerability taxonomy
 - STRIDE — Microsoft's threat modeling framework
 
-### /autoresearch:ship — Universal Shipping Workflow (v1.1.0)
+### /autoresearch:ship — Universal Shipping Workflow
 
 Ship anything — code, content, marketing, sales, research, or design — through a structured 8-phase workflow that applies autoresearch loop principles to the last mile.
 
@@ -201,7 +201,7 @@ Score of 100 = fully ready. Below 80 = not shippable.
 
 **Output directory:** Creates `ship/{YYMMDD}-{HHMM}-{ship-slug}/` with `checklist.md`, `ship-log.tsv`, `summary.md`.
 
-### /autoresearch:scenario — Scenario-Driven Use Case Generator (v1.6.0)
+### /autoresearch:scenario — Scenario-Driven Use Case Generator
 
 Autonomous scenario exploration engine that generates, expands, and stress-tests use cases from a seed scenario. Discovers edge cases, failure modes, and derivative scenarios that manual analysis misses.
 
@@ -261,7 +261,7 @@ Iterations: 30
 Scenario: REST API pagination with filtering and sorting
 ```
 
-### /autoresearch:predict — Multi-Persona Swarm Prediction (v1.0.0)
+### /autoresearch:predict — Multi-Persona Swarm Prediction
 
 Multi-perspective code analysis using swarm intelligence principles. Simulates 3-5 expert personas (Architect, Security Analyst, Performance Engineer, Reliability Engineer, Devil's Advocate) that independently analyze code, debate findings, and reach consensus — all within Claude's native context. Zero external dependencies.
 

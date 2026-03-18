@@ -93,6 +93,17 @@ for JSON_FILE in "$PLUGIN_JSON" "$MARKETPLACE_JSON"; do
   fi
 done
 
+# --- Bump version in SKILL.md frontmatter ---
+SKILL_FILE=".claude/skills/autoresearch/SKILL.md"
+if [[ -f "$SKILL_FILE" ]] && grep -q "^version:" "$SKILL_FILE"; then
+  echo "    Updating $SKILL_FILE"
+  if [[ "$(uname)" == "Darwin" ]]; then
+    sed -i '' "s/^version: .*/version: $VERSION/" "$SKILL_FILE"
+  else
+    sed -i "s/^version: .*/version: $VERSION/" "$SKILL_FILE"
+  fi
+fi
+
 # --- Bump version badges in README.md and guide/README.md ---
 for DOC_FILE in README.md guide/README.md; do
   if [[ -f "$DOC_FILE" ]] && grep -q "version-.*-blue" "$DOC_FILE"; then

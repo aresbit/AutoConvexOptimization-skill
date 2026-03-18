@@ -1,7 +1,7 @@
 ---
 name: autoresearch
 description: Autonomous Goal-directed Iteration. Modify, verify, keep/discard, repeat. Apply to ANY task with a measurable metric.
-argument-hint: "[Goal: <text>] [Scope: <glob>] [Metric: <text>] [Verify: <cmd>]"
+argument-hint: "[Goal: <text>] [Scope: <glob>] [Metric: <text>] [Verify: <cmd>] [Guard: <cmd>] [--iterations N]"
 ---
 
 EXECUTE IMMEDIATELY — do not deliberate, do not ask clarifying questions before reading the protocol.
@@ -11,7 +11,7 @@ EXECUTE IMMEDIATELY — do not deliberate, do not ask clarifying questions befor
 Extract these from $ARGUMENTS — the user may provide extensive context alongside config. Ignore prose and extract ONLY structured fields:
 
 - `Goal:` — text after "Goal:" keyword
-- `Scope:` — file globs after "Scope:" keyword
+- `Scope:` or `--scope <glob>` — file globs after "Scope:" keyword
 - `Metric:` — text after "Metric:" keyword
 - `Verify:` — shell command after "Verify:" keyword
 - `Guard:` — shell command after "Guard:" keyword (optional)

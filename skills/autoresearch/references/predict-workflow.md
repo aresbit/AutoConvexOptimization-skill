@@ -84,7 +84,7 @@ Parse inline arguments in this order (flags take precedence over positional text
 Parse and validate configuration:
 - Resolve `--scope` globs to actual file list. If no files match, ask user to refine scope.
 - Map `--depth` preset to persona count and round count:
-  - `quick` → 3 personas, 1 round
+  - `shallow` → 3 personas, 1 round
   - `standard` → 5 personas, 2 rounds (default)
   - `deep` → 8 personas, 3 rounds
 - Validate `--chain` target(s). Supports single (`--chain debug`) or comma-separated multi-chain (`--chain scenario,debug,fix`). Each target must be a known tool (debug, security, fix, ship, scenario). Multi-chain executes sequentially — each stage's findings feed into the next via handoff.json
